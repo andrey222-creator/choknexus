@@ -188,6 +188,58 @@ body {
     display: block;
 }
 
+/* ================================
+   BOTÃO SAIR
+================================ */
+
+.logout-button {
+    position: fixed;
+
+    top: 30px;
+    right: 35px;
+
+    z-index: 100;
+
+    padding: 10px 24px;
+
+    background: #16bfd3;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #0daec1;
+
+    transform: translateY(-3px) scale(1.04);
+
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.18);
+}
+
+.logout-button:active {
+    transform: translateY(0) scale(0.94);
+
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.14);
+}
+
+.logout-button:focus-visible {
+    outline: 2px solid #16bfd3;
+    outline-offset: 4px;
+}
+
 
 /* ================================
    RESPONSIVIDADE
