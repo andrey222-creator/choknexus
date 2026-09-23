@@ -15,6 +15,9 @@ const loginMessage = document.getElementById("loginMessage");
 
 let loginEmAndamento = false;
 
+// Modo demonstração (somente GitHub Pages): não há backend; nenhuma credencial é enviada.
+const MODO_DEMO_PAGES = window.location.hostname.endsWith("github.io");
+
 
 // =================================
 // FOCO INICIAL
@@ -86,6 +89,14 @@ loginForm.addEventListener("submit", async (event) => {
         return;
     }
 
+    if (MODO_DEMO_PAGES) {
+        senhaInput.value = "";
+        loginMessage.textContent =
+            "Modo demonstração: login Arius indisponível no GitHub Pages.";
+        window.location.href = "home.html";
+        return;
+    }
+
 
     // =================================
     // INICIA LOGIN
@@ -120,7 +131,7 @@ loginForm.addEventListener("submit", async (event) => {
         }
 
         loginMessage.textContent = "Login realizado com sucesso.";
-        window.location.href = "/home.html";
+        window.location.href = "home.html";
         return;
 
     } catch (error) {
