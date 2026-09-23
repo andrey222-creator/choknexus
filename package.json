@@ -1,0 +1,9 @@
+{
+  "name": "choknexus",
+  "private": true,
+  "description": "ChokNexus: frontend estático + backend em server/.",
+  "scripts": {
+    "start": "npm --prefix server start",
+    "watch:deploy": "node tools/auto-deploy.mjs"
+  }
+}
