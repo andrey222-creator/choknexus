@@ -26,7 +26,7 @@ jobs:
       - name: Preparar frontend estático
         run: |
           mkdir -p _site/src
-          cp index.html home.html _site/
+          cp *.html _site/
           cp -r src/css src/js src/assets _site/src/
           touch _site/.nojekyll
           if find _site \( -name '.env*' -o -name '*.log' -o -name 'node_modules' -o -path '*/server*' \) | grep -q .; then

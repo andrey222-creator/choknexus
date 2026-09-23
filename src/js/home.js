@@ -4,7 +4,15 @@ const MODO_DEMO_PAGES = window.location.hostname.endsWith("github.io");
 window.addEventListener("DOMContentLoaded", async () => {
 
     const btnSair = document.getElementById("btnSair");
+    const btnComercial = document.getElementById("btnComercial");
 
+    // =================================
+    // ACESSO COMERCIAL
+    // =================================
+
+    btnComercial.addEventListener("click", () => {
+        window.location.href = "comercial.html";
+    });
 
     // =================================
     // LOGOUT

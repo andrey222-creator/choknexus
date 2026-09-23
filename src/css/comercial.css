@@ -1,0 +1,335 @@
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+
+/* =========================================
+   PÁGINA
+========================================= */
+
+.comercial-page {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+    min-height: 700px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================
+   CABEÇALHO
+========================================= */
+
+.comercial-header {
+    position: absolute;
+
+    top: 35px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+}
+
+
+/* LOGO REDONDO COMERCIAL */
+
+.comercial-logo {
+    width: 90px;
+    height: 90px;
+
+    object-fit: contain;
+    display: block;
+}
+
+
+/* TÍTULO COMERCIAL */
+
+.comercial-title {
+    width: 420px;
+    height: auto;
+
+    object-fit: contain;
+    display: block;
+}
+
+
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
+
+.comercial-content {
+    position: absolute;
+
+    top: 140px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 1080px;
+
+    display: grid;
+
+    grid-template-columns: 180px 1fr;
+
+    column-gap: 45px;
+}
+
+
+/* =========================================
+   MENU ESQUERDO
+========================================= */
+
+.comercial-menu {
+    height: 625px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding-top: 40px;
+    padding-bottom: 130px;
+}
+
+
+/* =========================================
+   BOTÕES DOS LOGOS
+========================================= */
+
+.menu-logo-button {
+    width: 140px;
+    height: 140px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0;
+
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.22s ease,
+        filter 0.22s ease;
+}
+
+
+.menu-logo-button img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    display: block;
+
+    transition:
+        transform 0.22s ease,
+        filter 0.22s ease;
+}
+
+
+.menu-logo-button:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+
+.menu-logo-button:hover img {
+    filter:
+        drop-shadow(0 9px 8px rgba(0, 0, 0, 0.18))
+        brightness(1.03);
+}
+
+
+.menu-logo-button:active {
+    transform: translateY(-1px) scale(0.94);
+}
+
+
+/* =========================================
+   ÁREA DOS PAINÉIS
+========================================= */
+
+.panels-area {
+    width: 855px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 45px;
+}
+
+
+/* =========================================
+   DIVS QUE RECEBERÃO OS PAINÉIS
+========================================= */
+
+.dashboard-panel {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    background: transparent;
+
+    border: none;
+}
+
+
+/* PAINEL SUPERIOR */
+
+.dashboard-panel-top {
+    height: 305px;
+}
+
+
+/* PAINEL INFERIOR */
+
+.dashboard-panel-bottom {
+    height: 280px;
+}
+
+
+/* =========================================
+   CHOKDOCE — CANTO INFERIOR ESQUERDO
+========================================= */
+
+.brand-chokdoce {
+    position: fixed;
+
+    left: 55px;
+    bottom: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.brand-chokdoce img {
+    width: 65px;
+    height: auto;
+
+    display: block;
+}
+
+
+/* =========================================
+   CHOKNEXUS — CANTO INFERIOR DIREITO
+========================================= */
+
+.nexus-button {
+    position: fixed;
+
+    right: 45px;
+    bottom: 30px;
+
+    width: 70px;
+    height: 70px;
+
+    padding: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.22s ease,
+        filter 0.22s ease;
+}
+
+
+.nexus-button img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    display: block;
+}
+
+
+.nexus-button:hover {
+    transform: translateY(-5px) scale(1.07);
+
+    filter:
+        drop-shadow(0 8px 7px rgba(0, 0, 0, 0.20));
+}
+
+
+.nexus-button:active {
+    transform: translateY(-1px) scale(0.93);
+}
+
+
+/* =========================================
+   TELAS MENORES
+========================================= */
+
+@media (max-width: 1200px) {
+
+    .comercial-content {
+        transform:
+            translateX(-50%)
+            scale(0.88);
+
+        transform-origin: top center;
+    }
+
+    .comercial-header {
+        transform:
+            translateX(-50%)
+            scale(0.90);
+
+        transform-origin: top center;
+    }
+
+}
+
+
+@media (max-height: 800px) {
+
+    .comercial-page {
+        transform: scale(0.88);
+        transform-origin: top center;
+
+        width: 113.64%;
+        height: 113.64%;
+        margin-left: -6.82%;
+    }
+
+}

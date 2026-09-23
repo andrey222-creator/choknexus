@@ -96,6 +96,10 @@ app.get(["/", "/index.html"], (_req, res) => {
   res.sendFile(path.join(rootDir, "index.html"));
 });
 
+app.get("/comercial.html", (_req, res) => {
+  res.sendFile(path.join(rootDir, "comercial.html"));
+});
+
 app.get("/home.html", (_req, res) => {
   res.sendFile(path.join(rootDir, "home.html"));
 });
