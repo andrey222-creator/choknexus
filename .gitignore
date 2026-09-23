@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+
+# Ambiente / credenciais
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+srv_out.log
+srv_err.log
+
+# Temporarios / diagnostico
+_*_temp.*
+*.tmp
+*.dump
+*.dmp
+
+# Chaves / certificados
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Claude Code local
+.claude/
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.vscode/

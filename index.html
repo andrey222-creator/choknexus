@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ChokNexus</title>
+
+    <link rel="stylesheet" href="src/css/login.css">
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <section class="login-container">
+
+            <div class="login-logo">
+                <img
+                    src="src/assets/choknexus/logo_choknexus.png"
+                    alt="ChokNexus"
+                >
+            </div>
+
+            <form id="loginForm" class="login-form">
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        id="usuario"
+                        name="usuario"
+                        placeholder="Usuário"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        placeholder="Senha"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" id="btnEntrar">
+                    Entrar
+                </button>
+
+                <p id="loginMessage" class="login-message"></p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <footer class="company-brand">
+        <img
+            src="src/assets/choknexus/logo.png"
+            alt="CHOKDOCE"
+        >
+    </footer>
+
+    <script src="src/js/login.js"></script>
+
+</body>
+
+</html>

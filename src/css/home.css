@@ -1,0 +1,245 @@
+/* ================================
+   RESET
+================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+
+/* ================================
+   PÁGINA
+================================ */
+
+.home-page {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+/* ================================
+   CONTEÚDO CENTRAL
+================================ */
+
+.nexus-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-top: 10px;
+}
+
+
+/* ================================
+   TÍTULO CHOK NEXUS
+================================ */
+
+.nexus-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.nexus-title img {
+    width: 400px;
+    height: 200px;
+
+    display: block;
+}
+
+
+/* ================================
+   GRADE DOS MÓDULOS
+================================ */
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 160px);
+
+    column-gap: 25px;
+    row-gap: 14px;
+
+    margin-top: 28px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* ================================
+   BOTÕES
+================================ */
+
+.module-button {
+    width: 160px;
+    height: 160px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.22s ease,
+        filter 0.22s ease;
+}
+
+.module-button img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    object-fit: contain;
+
+    transition:
+        transform 0.22s ease,
+        filter 0.22s ease;
+}
+
+
+/* ================================
+   HOVER
+================================ */
+
+.module-button:hover {
+    transform: translateY(-6px) scale(1.07);
+}
+
+.module-button:hover img {
+    filter:
+        drop-shadow(0 10px 8px rgba(0, 0, 0, 0.22))
+        brightness(1.04);
+}
+
+
+/* ================================
+   CLIQUE
+================================ */
+
+.module-button:active {
+    transform: translateY(-1px) scale(0.93);
+}
+
+.module-button:active img {
+    filter:
+        drop-shadow(0 4px 4px rgba(0, 0, 0, 0.18))
+        brightness(0.98);
+}
+
+
+/* ================================
+   FOCO
+================================ */
+
+.module-button:focus-visible {
+    outline: 2px solid #16bfd3;
+    outline-offset: 5px;
+}
+
+
+/* ================================
+   LOGO CHOKDOCE
+================================ */
+
+.company-brand {
+    position: fixed;
+
+    left: 20px;
+    bottom: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.company-brand img {
+    width: 140px;
+    height: auto;
+
+    display: block;
+}
+
+
+/* ================================
+   RESPONSIVIDADE
+================================ */
+
+@media (max-height: 850px) {
+
+    .nexus-title img {
+        width: 330px;
+    }
+
+    .modules-grid {
+        grid-template-columns: repeat(3, 140px);
+        column-gap: 20px;
+        row-gap: 10px;
+        margin-top: 18px;
+    }
+
+    .module-button {
+        width: 140px;
+        height: 140px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    body {
+        overflow-y: auto;
+    }
+
+    .nexus-container {
+        margin-top: 20px;
+    }
+
+    .nexus-title img {
+        width: min(330px, 80vw);
+    }
+
+    .modules-grid {
+        grid-template-columns: repeat(2, 135px);
+        gap: 20px;
+    }
+
+    .module-button {
+        width: 135px;
+        height: 135px;
+    }
+
+    .company-brand {
+        display: none;
+    }
+
+}
