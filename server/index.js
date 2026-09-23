@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CONFIG, withConnection } from "./db.js";
 import { autenticar, checkRateLimit, registrarTentativa } from "./auth.js";
+import { obterResumoComercial } from "./comercial.js";
 import {
   criarSessao,
   obterSessao,
@@ -31,6 +32,15 @@ function requireAuthPage(req, res, next) {
   const sessao = obterSessao(sessionId);
   if (!sessao) {
     return res.redirect("/");
+  }
+  next();
+}
+
+function requireAuthApi(req, res, next) {
+  const sessionId = lerCookieSessao(req);
+  const sessao = obterSessao(sessionId);
+  if (!sessao) {
+    return res.status(401).json({ ok: false, erro: "Não autenticado" });
   }
   next();
 }
@@ -99,6 +109,18 @@ app.get("/api/arius/health", async (_req, res) => {
   } catch (err) {
     res.status(500).json({ status: "erro", mensagem: err.message });
   }
+});
+
+app.get("/api/comercial/resumo", requireAuthApi, async (_req, res) => {
+  const resultado = await obterResumoComercial();
+  if (!resultado.ok) {
+    console.error("[api/comercial/resumo] erro interno:", resultado.motivo);
+    return res.status(resultado.status).json({
+      ok: false,
+      erro: "Dados comerciais indisponíveis no momento.",
+    });
+  }
+  return res.json({ ok: true, ...resultado.resumo });
 });
 
 app.get(["/", "/index.html"], (_req, res) => {
