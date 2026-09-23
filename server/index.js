@@ -26,6 +26,15 @@ function ehHttps(req) {
   return req.secure || req.headers["x-forwarded-proto"] === "https";
 }
 
+function requireAuthPage(req, res, next) {
+  const sessionId = lerCookieSessao(req);
+  const sessao = obterSessao(sessionId);
+  if (!sessao) {
+    return res.redirect("/");
+  }
+  next();
+}
+
 const MENSAGEM_CREDENCIAL_INVALIDA = "Usuário ou senha inválidos.";
 
 app.post("/api/auth/login", async (req, res) => {
@@ -96,11 +105,11 @@ app.get(["/", "/index.html"], (_req, res) => {
   res.sendFile(path.join(rootDir, "index.html"));
 });
 
-app.get("/comercial.html", (_req, res) => {
+app.get("/comercial.html", requireAuthPage, (_req, res) => {
   res.sendFile(path.join(rootDir, "comercial.html"));
 });
 
-app.get("/home.html", (_req, res) => {
+app.get("/home.html", requireAuthPage, (_req, res) => {
   res.sendFile(path.join(rootDir, "home.html"));
 });
 
