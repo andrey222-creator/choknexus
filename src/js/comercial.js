@@ -10,8 +10,15 @@ const dotsEl = document.getElementById("carrosselDots");
 const btnPrev = document.getElementById("carrosselPrev");
 const btnNext = document.getElementById("carrosselNext");
 
-// GitHub Pages: somente demonstração visual, sem dados comerciais.
+// GitHub Pages hospeda só o frontend: os dados vêm do backend ChokNexus local
+// (mesma máquina), autenticado. Localmente, URLs relativas.
 const MODO_DEMO_PAGES = window.location.hostname.endsWith("github.io");
+const BACKEND_BASE = MODO_DEMO_PAGES ? "http://localhost:3311" : "";
+const PAGES_COMERCIAL_URL = "https://andrey222-creator.github.io/choknexus/comercial.html";
+
+function apiUrl(caminho) {
+    return BACKEND_BASE + caminho;
+}
 
 
 // =================================
@@ -32,9 +39,7 @@ btnNexus.addEventListener("click", () => {
 btnMetas.addEventListener("click", () => {
 
     // GitHub Pages não hospeda o Metas: apenas encaminha para o ChokNexus local.
-    window.location.href = MODO_DEMO_PAGES
-        ? "http://localhost:3311/apps/metas"
-        : "/apps/metas";
+    window.location.href = apiUrl("/apps/metas");
 
 });
 
@@ -61,7 +66,8 @@ const ESCALA_MAXIMA = 2;
 
 const MSG_CARREGANDO = "Carregando...";
 const MSG_INDISPONIVEL = "Dados temporariamente indisponíveis.";
-const MSG_DEMO = "Disponível no ambiente autenticado.";
+const MSG_OFFLINE = "ChokNexus local indisponível.";
+const MSG_SEM_SESSAO = "Faça login no ChokNexus local.";
 
 const TONS = ["positive", "negative", "neutral"];
 const COR_HEX = /^#[0-9a-fA-F]{3,8}$/;
@@ -107,6 +113,22 @@ function colunasInicioGrupo(headerRows) {
     return inicios;
 }
 
+// No Pages o logo vem do backend local via fetch CORS com credenciais
+// (a rota exige Origin do Pages); localmente, <img> direto.
+function carregarLogo(img, caminho) {
+    if (!MODO_DEMO_PAGES) {
+        img.src = caminho;
+        return;
+    }
+    fetch(apiUrl(caminho), { credentials: "include" })
+        .then((resp) => (resp.ok ? resp.blob() : Promise.reject()))
+        .then((blob) => {
+            img.addEventListener("load", () => URL.revokeObjectURL(img.src), { once: true });
+            img.src = URL.createObjectURL(blob);
+        })
+        .catch(() => img.remove());
+}
+
 function criarCelulaCorpo(celula, coluna, inicios) {
     const td = document.createElement("td");
     const texto = textoDe(celula);
@@ -116,13 +138,13 @@ function criarCelulaCorpo(celula, coluna, inicios) {
     if (celula && typeof celula === "object") {
         aplicarSpans(td, celula);
 
-        if (celula.logo && celula.logo.campanhaId && !MODO_DEMO_PAGES) {
+        if (celula.logo && celula.logo.campanhaId) {
             const img = document.createElement("img");
             img.className = "quadro-logo";
             img.alt = "";
-            img.src = "/api/comercial/campanha/" + encodeURIComponent(celula.logo.campanhaId) + "/logo";
             img.addEventListener("error", () => img.remove());
             img.addEventListener("load", () => ajustarTodos());
+            carregarLogo(img, "/api/comercial/campanha/" + encodeURIComponent(celula.logo.campanhaId) + "/logo");
             td.appendChild(img);
 
             const span = document.createElement("span");
@@ -309,15 +331,56 @@ function renderizarQuadros(quadros) {
 
 let jaRenderizou = false;
 
-async function carregarResumo() {
+// Evita redirect infinito Pages ↔ login local (ex.: cookie bloqueado no navegador).
+// Apenas marca de navegação; não guarda nada de autenticação.
+const CHAVE_REDIRECT_LOGIN = "choknexus_redirect_login";
+const JANELA_REDIRECT_MS = 2 * 60 * 1000;
+
+function redirecionouHaPouco() {
     try {
-        const resp = await fetch("/api/comercial/resumo", { credentials: "include" });
+        const t = Number(sessionStorage.getItem(CHAVE_REDIRECT_LOGIN));
+        return t > 0 && Date.now() - t < JANELA_REDIRECT_MS;
+    } catch (_e) {
+        return false;
+    }
+}
 
-        if (resp.status === 401) {
-            window.location.href = "/";
-            return;
-        }
+function marcarRedirect(valor) {
+    try {
+        if (valor) sessionStorage.setItem(CHAVE_REDIRECT_LOGIN, String(valor));
+        else sessionStorage.removeItem(CHAVE_REDIRECT_LOGIN);
+    } catch (_e) { /* sem sessionStorage: segue sem a proteção */ }
+}
 
+function irParaLogin() {
+    if (!MODO_DEMO_PAGES) {
+        window.location.href = "/";
+        return;
+    }
+    if (redirecionouHaPouco()) {
+        if (!jaRenderizou) mostrarMensagemUnica(MSG_SEM_SESSAO);
+        return;
+    }
+    marcarRedirect(Date.now());
+    window.location.href = apiUrl("/?returnUrl=" + encodeURIComponent(PAGES_COMERCIAL_URL));
+}
+
+async function carregarResumo() {
+    let resp;
+    try {
+        resp = await fetch(apiUrl("/api/comercial/resumo"), { credentials: "include" });
+    } catch (_err) {
+        // Backend local fora do ar (ou acesso local não permitido pelo navegador).
+        if (!jaRenderizou) mostrarMensagemUnica(MODO_DEMO_PAGES ? MSG_OFFLINE : MSG_INDISPONIVEL);
+        return;
+    }
+
+    if (resp.status === 401) {
+        irParaLogin();
+        return;
+    }
+
+    try {
         if (!resp.ok) throw new Error("indisponivel");
 
         const dados = await resp.json();
@@ -325,16 +388,13 @@ async function carregarResumo() {
 
         renderizarQuadros(dados.quadrosComercial);
         jaRenderizou = true;
+        marcarRedirect(null);
     } catch (_err) {
         // Na atualização periódica, mantém os quadros já exibidos.
         if (!jaRenderizou) mostrarMensagemUnica(MSG_INDISPONIVEL);
     }
 }
 
-if (MODO_DEMO_PAGES) {
-    mostrarMensagemUnica(MSG_DEMO);
-} else {
-    mostrarMensagemUnica(MSG_CARREGANDO);
-    carregarResumo();
-    setInterval(carregarResumo, INTERVALO_REFRESH_MS);
-}
+mostrarMensagemUnica(MSG_CARREGANDO);
+carregarResumo();
+setInterval(carregarResumo, INTERVALO_REFRESH_MS);

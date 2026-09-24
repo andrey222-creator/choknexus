@@ -18,6 +18,27 @@ let loginEmAndamento = false;
 // Modo demonstração (somente GitHub Pages): não há backend; nenhuma credencial é enviada.
 const MODO_DEMO_PAGES = window.location.hostname.endsWith("github.io");
 
+// Retorno após login local: somente destinos exatos permitidos (sem open redirect).
+const RETURN_URLS_PERMITIDAS = [
+    "https://andrey222-creator.github.io/choknexus/comercial.html"
+];
+
+function obterReturnUrl() {
+    const url = new URLSearchParams(window.location.search).get("returnUrl");
+    return RETURN_URLS_PERMITIDAS.includes(url) ? url : null;
+}
+
+const RETURN_URL = MODO_DEMO_PAGES ? null : obterReturnUrl();
+
+// Já autenticado e vindo do Pages: /api/auth/me renova o cookie do Pages e volta.
+if (RETURN_URL) {
+    fetch("/api/auth/me", { credentials: "include" })
+        .then((resp) => {
+            if (resp.ok) window.location.replace(RETURN_URL);
+        })
+        .catch(() => {});
+}
+
 
 // =================================
 // FOCO INICIAL
@@ -131,7 +152,7 @@ loginForm.addEventListener("submit", async (event) => {
         }
 
         loginMessage.textContent = "Login realizado com sucesso.";
-        window.location.href = "home.html";
+        window.location.href = RETURN_URL || "home.html";
         return;
 
     } catch (error) {

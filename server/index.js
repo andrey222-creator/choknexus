@@ -13,6 +13,9 @@ import {
   lerCookieSessao,
   setCookieSessao,
   limparCookieSessao,
+  lerCookiePages,
+  setCookiePages,
+  limparCookiePages,
 } from "./session.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -50,7 +53,39 @@ function requireAuthApi(req, res, next) {
   next();
 }
 
-const MENSAGEM_CREDENCIAL_INVALIDA = "Usuário ou senha inválidos.";
+// Frontend publicado no GitHub Pages consome /api/comercial deste backend local.
+// CORS somente para esta origem exata (nunca "*"), com credenciais.
+const ORIGENS_PAGES = new Set(["https://andrey222-creator.github.io"]);
+
+function origemPagesPermitida(req) {
+  return ORIGENS_PAGES.has(req.headers.origin);
+}
+
+app.use("/api/comercial", (req, res, next) => {
+  res.vary("Origin");
+  if (!origemPagesPermitida(req)) return next();
+  res.set("Access-Control-Allow-Origin", req.headers.origin);
+  res.set("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    res.set("Access-Control-Allow-Methods", "GET");
+    if (req.headers["access-control-request-private-network"] === "true") {
+      res.set("Access-Control-Allow-Private-Network", "true");
+    }
+    res.set("Access-Control-Max-Age", "600");
+    return res.status(204).end();
+  }
+  next();
+});
+
+// Sessão normal (cookie Lax) ou, vindo do GitHub Pages, o cookie choknexus_pages —
+// aceito somente com Origin exata do Pages (fetch CORS; nunca img/form de outro site).
+function requireAuthComercial(req, res, next) {
+  if (obterSessao(lerCookieSessao(req))) return next();
+  if (origemPagesPermitida(req) && obterSessao(lerCookiePages(req))) return next();
+  return res.status(401).json({ ok: false, erro: "Não autenticado" });
+}
+
+const MENSAGEM_CREDENCIAL_INVALIDA ="Usuário ou senha inválidos.";
 
 app.post("/api/auth/login", async (req, res) => {
   const { usuario, senha } = req.body || {};
@@ -78,6 +113,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     const sessionId = criarSessao(resultado.usuario);
     setCookieSessao(res, sessionId, ehHttps(req));
+    setCookiePages(res, sessionId);
     return res.json({ ok: true, usuario: { nome: resultado.usuario.nome } });
   } catch (err) {
     console.error("[auth/login] erro interno:", err.message);
@@ -91,6 +127,8 @@ app.get("/api/auth/me", (req, res) => {
   if (!sessao) {
     return res.status(401).json({ ok: false });
   }
+  // Sessões anteriores ao cookie do Pages passam a tê-lo também.
+  setCookiePages(res, sessionId);
   return res.json({ ok: true, usuario: { idUsuario: sessao.idUsuario, nome: sessao.nome } });
 });
 
@@ -98,6 +136,7 @@ app.post("/api/auth/logout", (req, res) => {
   const sessionId = lerCookieSessao(req);
   destruirSessao(sessionId);
   limparCookieSessao(res, ehHttps(req));
+  limparCookiePages(res);
   return res.json({ ok: true });
 });
 
@@ -116,7 +155,7 @@ app.get("/api/arius/health", async (_req, res) => {
   }
 });
 
-app.get("/api/comercial/resumo", requireAuthApi, async (_req, res) => {
+app.get("/api/comercial/resumo", requireAuthComercial, async (_req, res) => {
   const resultado = await obterResumoComercial();
   if (!resultado.ok) {
     console.error("[api/comercial/resumo] erro interno:", resultado.motivo);
@@ -128,7 +167,7 @@ app.get("/api/comercial/resumo", requireAuthApi, async (_req, res) => {
   return res.json({ ok: true, ...resultado.resumo });
 });
 
-app.get("/api/comercial/campanha/:campanhaId/logo", requireAuthApi, async (req, res) => {
+app.get("/api/comercial/campanha/:campanhaId/logo", requireAuthComercial, async (req, res) => {
   const resultado = await obterLogoCampanha(req.params.campanhaId);
   if (!resultado.ok) {
     if (resultado.motivo) console.error("[api/comercial/logo] erro interno:", resultado.motivo);
