@@ -219,6 +219,77 @@ body {
 }
 
 
+/* CONTEÚDO DOS PAINÉIS (tabelas vindas da API) */
+
+#painelMetas,
+#painelTrade {
+    overflow: auto;
+}
+
+/* afasta o título do logo do cabeçalho */
+#painelMetas {
+    padding-top: 18px;
+}
+
+#painelMetas .painel-mensagem,
+#painelTrade .painel-mensagem {
+    padding: 12px 4px;
+    font-size: 13px;
+    color: #777777;
+}
+
+#painelMetas .painel-titulo,
+#painelTrade .painel-titulo {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #4a2a12;
+}
+
+#painelMetas .painel-tabela,
+#painelTrade .painel-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    color: #222222;
+}
+
+#painelMetas .painel-tabela th,
+#painelTrade .painel-tabela th {
+    padding: 4px 5px;
+    background: #4a2a12;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #ffffff;
+    line-height: 1.2;
+}
+
+#painelTrade .painel-tabela .painel-grupo th {
+    background: #6b4226;
+}
+
+#painelMetas .painel-tabela td,
+#painelTrade .painel-tabela td {
+    padding: 4px 5px;
+    text-align: right;
+    white-space: nowrap;
+    border-bottom: 1px solid #e6e0da;
+    font-variant-numeric: tabular-nums;
+}
+
+#painelMetas .painel-tabela td:first-child,
+#painelTrade .painel-tabela td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+
+#painelMetas .painel-tabela tbody tr:nth-child(even),
+#painelTrade .painel-tabela tbody tr:nth-child(even) {
+    background: #f7f3ef;
+}
+
+
 /* =========================================
    CHOKDOCE — CANTO INFERIOR ESQUERDO
 ========================================= */
