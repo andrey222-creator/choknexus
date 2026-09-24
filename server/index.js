@@ -140,6 +140,9 @@ app.get("/home.html", requireAuthPage, (_req, res) => {
   res.sendFile(path.join(rootDir, "home.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`[chokNexus-server] rodando na porta ${PORT}`);
+// Somente local (não expor na rede).
+const HOST = process.env.HOST || "127.0.0.1";
+
+app.listen(PORT, HOST, () => {
+  console.log(`[chokNexus-server] rodando em http://${HOST}:${PORT}`);
 });
