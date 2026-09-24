@@ -25,10 +25,10 @@ btnNexus.addEventListener("click", () => {
 
 btnMetas.addEventListener("click", () => {
 
-    // GitHub Pages é só demonstração: sem relatório completo.
-    if (window.location.hostname.endsWith("github.io")) return;
-
-    window.location.href = "/apps/metas";
+    // GitHub Pages não hospeda o Metas: apenas encaminha para o ChokNexus local.
+    window.location.href = window.location.hostname.endsWith("github.io")
+        ? "http://localhost:3311/apps/metas"
+        : "/apps/metas";
 
 });
 
