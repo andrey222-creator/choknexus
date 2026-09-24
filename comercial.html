@@ -8,7 +8,7 @@
     <title>Comercial | ChokNexus</title>
     <link rel="icon" type="image/png" href="src/assets/choknexus/favicon_choknexus.png?v=2">
 
-    <link rel="stylesheet" href="src/css/comercial.css">
+    <link rel="stylesheet" href="src/css/comercial.css?v=20260924-carrossel1">
 </head>
 
 <body>
@@ -49,6 +49,19 @@
 
                 <button
                     class="menu-logo-button"
+                    id="btnTrade"
+                    type="button"
+                    aria-label="ChokDoce Trade Marketing"
+                >
+                    <img
+                        src="src/assets/choknexus/logo_trade_nexus.png"
+                        alt="ChokDoce Trade Marketing"
+                    >
+                </button>
+
+
+                <button
+                    class="menu-logo-button"
                     id="btnMetas"
                     type="button"
                     aria-label="Metas e Atingimentos"
@@ -62,41 +75,43 @@
 
                 <button
                     class="menu-logo-button"
-                    id="btnTrade"
+                    id="btnLojas"
                     type="button"
-                    aria-label="ChokDoce Trade Marketing"
+                    aria-label="Lojas"
                 >
                     <img
-                        src="src/assets/choknexus/logo_trade_nexus.png"
-                        alt="ChokDoce Trade Marketing"
+                        src="src/assets/choknexus/logo_lojas_nexus.png"
+                        alt="Lojas"
                     >
                 </button>
 
             </aside>
 
 
-            <!-- PAINÉIS -->
+            <!-- CARROSSEL DOS QUADROS DO METAS -->
 
             <section class="panels-area">
 
-                <!--
-                    PAINEL SUPERIOR
-                    Será alimentado posteriormente.
-                -->
                 <div
-                    id="painelMetas"
-                    class="dashboard-panel dashboard-panel-top"
-                ></div>
+                    id="carrosselComercial"
+                    class="carrossel"
+                    aria-roledescription="carrossel"
+                    aria-label="Quadros Metas & Atingimentos"
+                >
 
+                    <div class="carrossel-palco">
 
-                <!--
-                    PAINEL INFERIOR
-                    Será alimentado posteriormente.
-                -->
-                <div
-                    id="painelTrade"
-                    class="dashboard-panel dashboard-panel-bottom"
-                ></div>
+                        <div id="carrosselSlides" class="carrossel-slides" aria-live="polite"></div>
+
+                        <button id="carrosselPrev" class="carrossel-seta carrossel-seta-prev" type="button" aria-label="Quadro anterior">&#8249;</button>
+
+                        <button id="carrosselNext" class="carrossel-seta carrossel-seta-next" type="button" aria-label="Próximo quadro">&#8250;</button>
+
+                    </div>
+
+                    <div id="carrosselDots" class="carrossel-dots"></div>
+
+                </div>
 
             </section>
 
@@ -134,7 +149,7 @@
     </main>
 
 
-    <script src="src/js/comercial.js"></script>
+    <script src="src/js/comercial.js?v=20260924-carrossel1"></script>
 
 </body>
 

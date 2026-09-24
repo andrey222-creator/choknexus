@@ -90,11 +90,14 @@ body {
 
     transform: translateX(-50%);
 
-    width: 1080px;
+    /* Área central cresce com a tela (carrossel grande), mesma grade. */
+    width: min(1360px, calc(100vw - 260px));
+
+    --area-h: clamp(520px, calc(100vh - 190px), 820px);
 
     display: grid;
 
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 180px minmax(0, 1fr);
 
     column-gap: 45px;
 }
@@ -105,7 +108,7 @@ body {
 ========================================= */
 
 .comercial-menu {
-    height: 625px;
+    height: var(--area-h);
 
     display: flex;
     flex-direction: column;
@@ -113,8 +116,8 @@ body {
 
     justify-content: space-between;
 
-    padding-top: 40px;
-    padding-bottom: 130px;
+    padding-top: 20px;
+    padding-bottom: 60px;
 }
 
 
@@ -175,118 +178,334 @@ body {
 
 
 /* =========================================
-   ÁREA DOS PAINÉIS
+   ÁREA CENTRAL — CARROSSEL DOS QUADROS
 ========================================= */
 
 .panels-area {
-    width: 855px;
+    min-width: 0;
+    height: var(--area-h);
+}
+
+
+.carrossel {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
+}
 
-    gap: 45px;
+
+/* Palco: laterais internas reservadas às setas (não cobrem o quadro). */
+
+.carrossel-palco {
+    position: relative;
+
+    flex: 1;
+    min-height: 0;
+
+    padding: 16px 46px 0;
+}
+
+
+.carrossel-slides {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+.carrossel-slide {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    /* sai primeiro, depois o próximo entra (sem tabelas sobrepostas) */
+    transition:
+        opacity 0.3s ease,
+        visibility 0s linear 0.3s;
+}
+
+
+.carrossel-slide.ativo {
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 0.35s ease 0.3s,
+        visibility 0s linear 0.3s;
+}
+
+
+.carrossel-mensagem {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+    color: #777777;
+}
+
+
+/* Setas */
+
+.carrossel-seta {
+    position: absolute;
+    top: 50%;
+
+    width: 34px;
+    height: 56px;
+
+    transform: translateY(-50%);
+
+    padding: 0;
+
+    background: transparent;
+    border: none;
+
+    color: #5f2d19;
+    font-size: 44px;
+    line-height: 56px;
+
+    opacity: 0.35;
+    cursor: pointer;
+
+    transition: opacity 0.2s ease;
+}
+
+.carrossel-seta:hover,
+.carrossel-seta:focus-visible {
+    opacity: 0.9;
+}
+
+.carrossel-seta-prev {
+    left: 4px;
+}
+
+.carrossel-seta-next {
+    right: 4px;
+}
+
+
+/* Indicadores */
+
+.carrossel-dots {
+    height: 34px;
+    margin-top: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.carrossel-dot {
+    width: 11px;
+    height: 11px;
+
+    padding: 0;
+
+    border: 1.5px solid #5f2d19;
+    border-radius: 50%;
+
+    background: transparent;
+
+    opacity: 0.45;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.carrossel-dot:hover {
+    opacity: 0.8;
+}
+
+.carrossel-dot.ativo {
+    background: #5f2d19;
+    opacity: 0.9;
 }
 
 
 /* =========================================
-   DIVS QUE RECEBERÃO OS PAINÉIS
+   QUADRO (reconstruído a partir de quadrosComercial,
+   mesmo visual do Metas & Atingimentos)
 ========================================= */
 
-.dashboard-panel {
-    position: relative;
+.quadro {
+    position: absolute;
+    top: 0;
+    left: 0;
 
-    width: 100%;
+    display: inline-block;
 
+    transform-origin: top left;
+
+    font-family: Inter, Arial, Helvetica, sans-serif;
+
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    border-radius: 8px;
     overflow: hidden;
 
-    background: transparent;
-
-    border: none;
+    background: #ffffff;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.06),
+        0 8px 24px -12px rgba(0, 0, 0, 0.18);
 }
 
 
-/* PAINEL SUPERIOR */
+.quadro-titulo {
+    padding: 7px 12px;
 
-.dashboard-panel-top {
-    height: 305px;
-}
-
-
-/* PAINEL INFERIOR */
-
-.dashboard-panel-bottom {
-    height: 280px;
-}
-
-
-/* CONTEÚDO DOS PAINÉIS (tabelas vindas da API) */
-
-#painelMetas,
-#painelTrade {
-    overflow: auto;
-}
-
-/* afasta o título do logo do cabeçalho */
-#painelMetas {
-    padding-top: 18px;
-}
-
-#painelMetas .painel-mensagem,
-#painelTrade .painel-mensagem {
-    padding: 12px 4px;
-    font-size: 13px;
-    color: #777777;
-}
-
-#painelMetas .painel-titulo,
-#painelTrade .painel-titulo {
-    margin-bottom: 6px;
-    font-size: 13px;
-    font-weight: bold;
-    color: #4a2a12;
-}
-
-#painelMetas .painel-tabela,
-#painelTrade .painel-tabela {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11px;
-    color: #222222;
-}
-
-#painelMetas .painel-tabela th,
-#painelTrade .painel-tabela th {
-    padding: 4px 5px;
-    background: #4a2a12;
+    background: #5f2d19;
     color: #ffffff;
-    font-weight: bold;
+
     text-align: center;
-    border: 1px solid #ffffff;
-    line-height: 1.2;
+    text-transform: uppercase;
+
+    font-size: 12.5px;
+    font-weight: 700;
 }
 
-#painelTrade .painel-tabela .painel-grupo th {
-    background: #6b4226;
+.quadro-subtitulo {
+    display: block;
+
+    font-size: 11.5px;
+    font-weight: 400;
+
+    opacity: 0.85;
 }
 
-#painelMetas .painel-tabela td,
-#painelTrade .painel-tabela td {
-    padding: 4px 5px;
-    text-align: right;
-    white-space: nowrap;
-    border-bottom: 1px solid #e6e0da;
+
+.quadro-tabela {
+    border-collapse: collapse;
+
+    font-size: 14px;
+    color: #000000;
+
     font-variant-numeric: tabular-nums;
 }
 
-#painelMetas .painel-tabela td:first-child,
-#painelTrade .painel-tabela td:first-child {
-    text-align: left;
-    font-weight: bold;
+.quadro-tabela th {
+    padding: 8px 12px;
+
+    background: #f5f5f5;
+    color: rgba(0, 0, 0, 0.42);
+
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    font-size: 11.5px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.10);
 }
 
-#painelMetas .painel-tabela tbody tr:nth-child(even),
-#painelTrade .painel-tabela tbody tr:nth-child(even) {
-    background: #f7f3ef;
+.quadro-tabela tr.grupo th {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.62);
+}
+
+.quadro-tabela td {
+    padding: 7px 12px;
+
+    text-align: right;
+    white-space: nowrap;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+.quadro-tabela th:first-child,
+.quadro-tabela td:first-child {
+    text-align: left;
+}
+
+.quadro-tabela .inicio-grupo {
+    border-left: 1px dashed rgba(0, 0, 0, 0.20);
+}
+
+.quadro-tabela tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.quadro-tabela tr.subtotal td {
+    font-weight: 600;
+    background: #f5f5f5;
+}
+
+.quadro-tabela tr.total {
+    background: rgba(95, 45, 25, 0.10);
+}
+
+.quadro-tabela tr.total td {
+    font-weight: 700;
+    border-top: 2px solid rgba(0, 0, 0, 0.20);
+    border-bottom: none;
+}
+
+.quadro-tabela .pill {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 2px 6px;
+    border-radius: 5px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.quadro-tabela .pill.positive {
+    background: rgba(100, 190, 210, 0.14);
+    color: #1a6e80;
+}
+
+.quadro-tabela .pill.negative {
+    background: rgba(95, 45, 25, 0.08);
+    color: #5f2d19;
+}
+
+.quadro-tabela .pill.neutral {
+    background: #f5f5f5;
+    color: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+.quadro-tabela .quadro-logo {
+    height: 38px;
+    max-width: 130px;
+
+    object-fit: contain;
+    vertical-align: middle;
+
+    margin-right: 8px;
+}
+
+.quadro-tabela .quadro-logo-texto {
+    vertical-align: middle;
+}
+
+.quadro-tabela td.destaque {
+    font-weight: 700;
+}
+
+
+/* Lojas: ainda sem ação nesta etapa. */
+
+#btnLojas {
+    cursor: default;
 }
 
 
@@ -399,8 +618,15 @@ body {
         transform-origin: top center;
 
         width: 113.64%;
-        height: 113.64%;
+        /* altura real da janela após o scale (rodapé no rodapé) */
+        height: 113.64vh;
         margin-left: -6.82%;
+    }
+
+    .comercial-content {
+        width: min(1360px, calc(113.64vw - 260px));
+
+        --area-h: clamp(460px, calc(113.64vh - 190px), 820px);
     }
 
 }

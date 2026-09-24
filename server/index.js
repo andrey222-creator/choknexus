@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CONFIG, withConnection } from "./db.js";
 import { autenticar, checkRateLimit, registrarTentativa } from "./auth.js";
-import { obterResumoComercial } from "./comercial.js";
+import { obterResumoComercial, obterLogoCampanha } from "./comercial.js";
 import { registrarMetas } from "./metas.js";
 import {
   criarSessao,
@@ -126,6 +126,18 @@ app.get("/api/comercial/resumo", requireAuthApi, async (_req, res) => {
     });
   }
   return res.json({ ok: true, ...resultado.resumo });
+});
+
+app.get("/api/comercial/campanha/:campanhaId/logo", requireAuthApi, async (req, res) => {
+  const resultado = await obterLogoCampanha(req.params.campanhaId);
+  if (!resultado.ok) {
+    if (resultado.motivo) console.error("[api/comercial/logo] erro interno:", resultado.motivo);
+    return res.status(resultado.status === 404 ? 404 : resultado.status).end();
+  }
+  res.set("Content-Type", resultado.mime);
+  res.set("Cache-Control", "private, max-age=300");
+  res.set("X-Content-Type-Options", "nosniff");
+  return res.send(resultado.buffer);
 });
 
 app.get(["/", "/index.html"], (_req, res) => {
