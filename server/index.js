@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { CONFIG, withConnection } from "./db.js";
 import { autenticar, checkRateLimit, registrarTentativa } from "./auth.js";
 import { obterResumoComercial } from "./comercial.js";
+import { registrarMetas } from "./metas.js";
 import {
   criarSessao,
   obterSessao,
@@ -19,6 +20,10 @@ const rootDir = path.resolve(__dirname, "..");
 
 const app = express();
 const PORT = process.env.PORT || 3311;
+
+// Metas & Atingimentos (proxy protegido para o Vendas) antes do express.json:
+// o corpo é repassado sem parse/limite.
+registrarMetas(app, { requireAuthPage, requireAuthApi });
 
 app.use(express.json({ limit: "1kb" }));
 app.use("/src", express.static(path.join(rootDir, "src")));

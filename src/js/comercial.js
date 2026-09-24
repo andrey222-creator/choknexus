@@ -3,6 +3,7 @@
 // =================================
 
 const btnNexus = document.getElementById("btnNexus");
+const btnMetas = document.getElementById("btnMetas");
 const painelMetas = document.getElementById("painelMetas");
 const painelTrade = document.getElementById("painelTrade");
 
@@ -14,6 +15,20 @@ const painelTrade = document.getElementById("painelTrade");
 btnNexus.addEventListener("click", () => {
 
     window.location.href = "home.html";
+
+});
+
+
+// =================================
+// METAS & ATINGIMENTOS (relatório completo)
+// =================================
+
+btnMetas.addEventListener("click", () => {
+
+    // GitHub Pages é só demonstração: sem relatório completo.
+    if (window.location.hostname.endsWith("github.io")) return;
+
+    window.location.href = "/apps/metas";
 
 });
 
